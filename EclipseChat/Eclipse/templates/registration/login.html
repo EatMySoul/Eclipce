@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Form</title>
+	<link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+{{user}}
+	<h1>EClIPSE</h1>
+	<div class="form">
+		<form action="{% url 'login' %}" method="POST">
+			 {% csrf_token %}
+
+		<h2>Авторизация</h2>
+		<div class="input-form">
+			<input type="text" placeholder="Логин", name="username">
+		</div>
+		<div class="input-form">
+			<input type="password" placeholder="Пароль", name="password">
+		</div>
+
+		<div class="input-form">
+			<input type="submit" value="Войти">
+		</div>
+		<h3>Забыли пароль?<h3>
+		<h4>Нет аккаунта?</h4>
+		<style >
+			a{
+				color: black;
+			}
+		</style>
+		<a href="../registration/" class="forget">Регистрация</a></form>
+	</div>
+
+</body>
+</html>

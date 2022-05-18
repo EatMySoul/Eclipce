@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>{{user}}</p>
+{% if from.errors %}
+<p>{{form.errors.error}}</p>
+{% endif %}
+<form action="{% url 'login' %}" method="POST">
+    {{form}}
+    {% csrf_token %}
+    <button type="submit" class="btn btn-submit">Hell yea</button>
+</form>
+
+</body>
+</html>

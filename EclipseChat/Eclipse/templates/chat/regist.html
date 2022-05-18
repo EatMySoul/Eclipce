@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8">
+	<title>Form</title>
+	<link rel="stylesheet" href="{% static 'stylereg.css' %}">
+</head>
+<body>
+
+	<h1> ECLIPSE</h1>
+	<div class="form">
+		<form action="/reguser/" method="POST">
+			{% csrf_token %}
+			<h2>Регистрация </h2>
+			<div class="input-form" >
+				<input type="text" placeholder="Логин" name="username">
+			</div>
+			<div class="input-form">
+				<input type="password" placeholder="Пароль" name="password""><div class="input-form">
+			</div>
+				<input type="password" placeholder="Повторить пароль" name="passwordRepeat">
+			</div>
+			<div class="input-form">
+				<input type="submit" value="Регистрация", id="registration_button">
+			</div>
+			<a href="../login/" class="forget"> Назад</a>
+		</form>
+	</div>
+
+</body>
+</html>

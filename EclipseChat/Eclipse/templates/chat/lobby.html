@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	
+	<title>Chat</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'lobbyStyle.css' %}">
+</head>
+<body>
+	<div class="container">
+		<!-- левая часть -->
+		<div class="leftSide">
+			<!-- user-->
+			<div class="header">
+				<div class="userimg">
+					<div class="imgbx">
+						<img src="/media/{{user_icon_path}}" class="cover">
+					</div>
+						
+				</div>
+				<div class="imgText">
+					<h4>{{user}}</h4>
+				</div>
+			</div>
+				
+			<!-- поиск чата -->
+			<div class="search_chat">
+				<div>
+					<input type="text" placeholder="Search chat">
+					
+				</div>
+			</div>
+
+			<div>
+				<button>create a new chat</button>
+			</div>
+			<!-- список чатов -->
+			<div class="chatlist">
+			{%  for user_chat in users_chats %}
+				<div class="block active">
+					<div class="imgbx">
+						<img src="/media/{{user_chat.chat.icon}}" class="cover">
+					</div>
+					<div class="details">
+						<div class="listHead">
+							<h4> {{ user_chat.chat.title }}</h4>
+							<p class="time"> 22:36</p>
+						</div>
+						<div class="message_p">
+							<p> pass </p>
+						</div>
+
+					</div>
+				</div>
+			{% endfor %}
+			</div>
+		</div>
+		<!-- правая часть -->
+		<div class="rightSide">
+			<div class="header">
+				<div class="imgText">
+					<div class="userimg">
+						<div class="imgbx">
+							<img src="/media/{{chat_icon_path}}" class="cover">
+						</div>
+						
+					</div>
+					<h4>ИСиТ-19</h4>
+				</div>
+				<!-- окно настройки не сделал  -->
+				<div class="window">
+					<a href="setting/" id= "open_pop_up"><li><ion-icon name="settings-outline"></ion-icon></li></a>
+				</div>
+				<div class="pop_up">
+					<div class="pop_up_container">
+						<div class="pop_up_body">
+				
+						</div>
+					</div>
+				</div>
+				<!-- Кнопка выхода -->
+				<a href="../user/logout/">
+				<button id="exit-chat"><li><ion-icon name="exit-outline"></ion-icon></li></button>
+				</a>
+			</div>	
+			<!-- Диалог -->
+			<div class="chatBox">
+				<div class="message my_message">
+					
+					<div>
+					<div class="name">User</div>
+
+					<div class="text">Привет
+						<p class="time">13:35</p>
+					</div>
+						
+					</div>
+
+
+
+				</div>
+				<div class="message frnd_message">
+				
+					<div>
+						<div class="name">Имя</div>	
+							<div class="text">Привет
+								<p class="time">13:35</p>
+							</div>
+						
+					</div>
+					
+				</div>
+				<div class="message my_message">
+					
+					<div>
+					<div class="name">User</div>
+
+					<div class="text">Привет
+						<p class="time">13:35</p>
+					</div>
+						
+					</div>
+				</div>
+				<div class="message frnd_message">
+				
+					<div>
+						<div class="name">Имя</div>	
+							<div class="text">Привет
+								<p class="time">13:35</p>
+							</div>
+						
+					</div>
+					
+				</div>
+				<div class="message my_message">
+					
+					<div>
+					<div class="name">User</div>
+
+					<div class="text">Привет
+						<p class="time">13:35</p>
+					</div>
+						
+					</div>
+				</div>
+				<div class="message frnd_message">
+				
+					<div>
+						<div class="name">Имя</div>	
+							<div class="text">Привет
+								<p class="time">13:35</p>
+							</div>
+						
+					</div>
+					
+				</div>
+				<div class="message my_message">
+					
+					<div>
+					<div class="name">User</div>
+
+					<div class="text">Старосты, завтра в 9:00 миниму 60 человек нам надо собрать, которые точно пойдут. 
+						<p class="time">13:35</p>
+					</div>
+						
+					</div>
+				</div>
+				<div class="message frnd_message">
+				
+					<div>
+						<div class="name">Имя</div>	
+							<div class="text">Я-
+								<p class="time">22:36</p>
+							</div>
+						
+					</div>
+					
+				</div>
+				
+				
+			</div>
+
+			<!-- поля для ввода -->
+			<div class="typebox">
+				<input type="text" id="message-input" placeholder="Введите сообщение">
+				<button type="submit" id="send-message"><li><ion-icon name="send-outline"></ion-icon></li></button>
+			</div>
+		</div>
+		
+	</div>
+	    <script>
+
+
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/lobby/'
+        );
+
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('#chat-log').value += (data.message + '\n');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+
+		alert('work');
+        document.querySelector('#message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {
+                document.querySelector('#send-message').click();
+            }
+        };
+
+		document.querySelector('#send-message').onclick = function(e) {
+
+			const messageInputDom = document.querySelector('#message-input');
+            const message = messageInputDom.value;
+	    	chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        }
+
+
+    </script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>		
+</body>
+</html>

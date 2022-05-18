@@ -1,0 +1,16 @@
+<!-- chat/templates/chat/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Rooms</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+<li>User : {{ user.get_username }} </li>
+{% else %}
+<li>who are you?</li>
+{% endif %}
+
+</body>
+</html>
