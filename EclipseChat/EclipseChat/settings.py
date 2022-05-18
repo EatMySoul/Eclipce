@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-)kh!zc=bqr99dxgh=ho2v9w_ay3qxk$&v8edkr0=s#pby+2@*1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['192.168.100.100','localhost']
 
 
 #AUTH_USER_MODEL = 'Eclipse.Users'
@@ -145,3 +145,12 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ASGI_APPLICATION = 'EclipseChat.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('192.168.100.101', 6379)],
+        },
+    },
+}

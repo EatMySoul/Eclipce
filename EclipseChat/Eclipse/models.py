@@ -63,10 +63,10 @@ class Users_icons(models.Model):
         verbose_name_plural = "Users icons"
 
 
-class Massages(models.Model):
+class Messages(models.Model):
 
-    massage = models.TextField()
-    date_time = models.DateTimeField()
+    message = models.TextField()
+    date_time = models.DateTimeField(auto_now_add=True)
     chat = models.ForeignKey(Chats, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

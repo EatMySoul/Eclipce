@@ -20,31 +20,44 @@
 						
 				</div>
 				<div class="imgText">
-					<h4>{{user}}</h4>
+					<h4 id="username">{{user}}</h4>
 				</div>
 			</div>
 				
 			<!-- поиск чата -->
+
 			<div class="search_chat">
 				<div>
-					<input type="text" placeholder="Search chat">
-					
+					<form action="/search/" method="POST">
+					{% csrf_token %}
+					<input type="text" placeholder="Search chat" name="chat_title">
+						<button type="submit">join</button>
+					</form>
 				</div>
+
 			</div>
 
-			<div>
-				<button>create a new chat</button>
+			<div class="search_chat">
+				<div>
+					<form action="/create/" method="POST">
+					{% csrf_token %}
+					<input type="text" placeholder="Chat title" name="chat_title">
+						<button type="submit">create</button>
+					</form>
+				</div>
+
 			</div>
 			<!-- список чатов -->
 			<div class="chatlist">
 			{%  for user_chat in users_chats %}
+				<a href='/lobby/{{ user_chat.chat.title }}' style="text-decoration: none;">
 				<div class="block active">
 					<div class="imgbx">
 						<img src="/media/{{user_chat.chat.icon}}" class="cover">
 					</div>
 					<div class="details">
 						<div class="listHead">
-							<h4> {{ user_chat.chat.title }}</h4>
+							<h4 > {{ user_chat.chat.title }}</h4>
 							<p class="time"> 22:36</p>
 						</div>
 						<div class="message_p">
@@ -53,6 +66,7 @@
 
 					</div>
 				</div>
+			</a>
 			{% endfor %}
 			</div>
 		</div>
@@ -62,13 +76,16 @@
 				<div class="imgText">
 					<div class="userimg">
 						<div class="imgbx">
-							<img src="/media/{{chat_icon_path}}" class="cover">
+							{% if current_chat_icon_path %}
+							<img src="/media/{{current_chat_icon_path}}" class="cover">
+							{% endif %}
 						</div>
 						
 					</div>
-					<h4>ИСиТ-19</h4>
+					<h4 id="current-chat">{{chat_title}}</h4>
 				</div>
 				<!-- окно настройки не сделал  -->
+				{% if chat_title and user_status == "Admin" %}
 				<div class="window">
 					<a href="setting/" id= "open_pop_up"><li><ion-icon name="settings-outline"></ion-icon></li></a>
 				</div>
@@ -79,104 +96,51 @@
 						</div>
 					</div>
 				</div>
+				{% endif %}
 				<!-- Кнопка выхода -->
+				{% if user_status == "Admin" %}
+				<form method="POST" action="/remove/{{chat_title}}/">
+					{% csrf_token %}
+				<button type="submit" id="remove_chat"><li><ion-icon name="trash-outline"></ion-icon></li></button>
+				</form>
+				{% endif %}
 				<a href="../user/logout/">
 				<button id="exit-chat"><li><ion-icon name="exit-outline"></ion-icon></li></button>
 				</a>
 			</div>	
 			<!-- Диалог -->
-			<div class="chatBox">
+			<div class="chatBox" id="chat_box">
+				{% for message in messages %}
+				{% if message.user == user %}
+				<!--  сообщение  исходящее -->
 				<div class="message my_message">
 					
 					<div>
-					<div class="name">User</div>
+					<div class="name">{{message.user}}</div>
 
-					<div class="text">Привет
-						<p class="time">13:35</p>
+					<div class="text">{{message.message}}
+						<p class="time">{{message.date_time}}</p>
 					</div>
 						
 					</div>
-
-
-
 				</div>
+				{% else %}
+				<!--  сообщение  входящее -->
 				<div class="message frnd_message">
 				
 					<div>
-						<div class="name">Имя</div>	
-							<div class="text">Привет
-								<p class="time">13:35</p>
+						<div class="name">{{message.user}}</div>
+							<div class="text">{{message.message}}
+								<p class="time">{{message.date_time}}</p>
 							</div>
 						
 					</div>
 					
 				</div>
-				<div class="message my_message">
-					
-					<div>
-					<div class="name">User</div>
+				{% endif %}
+				{% endfor %}
+				<!--   -->
 
-					<div class="text">Привет
-						<p class="time">13:35</p>
-					</div>
-						
-					</div>
-				</div>
-				<div class="message frnd_message">
-				
-					<div>
-						<div class="name">Имя</div>	
-							<div class="text">Привет
-								<p class="time">13:35</p>
-							</div>
-						
-					</div>
-					
-				</div>
-				<div class="message my_message">
-					
-					<div>
-					<div class="name">User</div>
-
-					<div class="text">Привет
-						<p class="time">13:35</p>
-					</div>
-						
-					</div>
-				</div>
-				<div class="message frnd_message">
-				
-					<div>
-						<div class="name">Имя</div>	
-							<div class="text">Привет
-								<p class="time">13:35</p>
-							</div>
-						
-					</div>
-					
-				</div>
-				<div class="message my_message">
-					
-					<div>
-					<div class="name">User</div>
-
-					<div class="text">Старосты, завтра в 9:00 миниму 60 человек нам надо собрать, которые точно пойдут. 
-						<p class="time">13:35</p>
-					</div>
-						
-					</div>
-				</div>
-				<div class="message frnd_message">
-				
-					<div>
-						<div class="name">Имя</div>	
-							<div class="text">Я-
-								<p class="time">22:36</p>
-							</div>
-						
-					</div>
-					
-				</div>
 				
 				
 			</div>
@@ -190,16 +154,36 @@
 		
 	</div>
 	    <script>
-
-
+		var block = document.getElementById('chat_box');
+  		block.scrollTop = block.scrollHeight;
+		const currentChat = document.getElementById('current-chat').textContent;
         const chatSocket = new WebSocket(
-            'ws://' + window.location.host + '/lobby/'
+            'ws://'
+            + window.location.host
+            + '/lobby/'
+            + currentChat
+            + '/'
         );
+
 
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
+            const message = data.message;
+            const username = data.username;
+            const date_time = data.date_time;
+            let chat_html =  '<div class=';
+            if (document.getElementById('username').textContent == data.username){
+            	chat_html = chat_html + '"message my_message"><div><div class="name">';
+			}
+			else{
+				chat_html = chat_html + '"message frnd_message"><div><div class="name">';
+			};
+			chat_html = chat_html + username +'</div><div class="text">' + message + '<p class="time">' + date_time + '</p></div></div></div>';
+            chat_box.insertAdjacentHTML('beforeend', chat_html);
+            var block = document.getElementById('chat_box');
+  			block.scrollTop = block.scrollHeight;
+
         };
 
         chatSocket.onclose = function(e) {
@@ -207,7 +191,7 @@
         };
 
 
-		alert('work');
+
         document.querySelector('#message-input').onkeyup = function(e) {
             if (e.keyCode === 13) {
                 document.querySelector('#send-message').click();
@@ -216,10 +200,13 @@
 
 		document.querySelector('#send-message').onclick = function(e) {
 
+		  	var block = document.getElementById('chat_box');
+  			block.scrollTop = block.scrollHeight;
+
 			const messageInputDom = document.querySelector('#message-input');
             const message = messageInputDom.value;
 	    	chatSocket.send(JSON.stringify({
-                'message': message
+                'message': message,
             }));
             messageInputDom.value = '';
         }
