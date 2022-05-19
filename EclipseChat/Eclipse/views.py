@@ -118,6 +118,9 @@ def chat_setting(request, chat_title):
                         chat.save()
 
 
+
+
+
                 return redirect(url)
 
 
@@ -161,8 +164,9 @@ def create_chat(request):
                 chat_user.save()
                 url = '/lobby/' + chat_title + '/'
                 return redirect(url)
-    else:
-        return redirect('/lobby')
+
+
+    return redirect('/lobby')
 
 
 def remove_chat(request,chat_title):

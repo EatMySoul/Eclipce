@@ -13,6 +13,7 @@
 		<div class="leftSide">
 			<!-- user-->
 			<div class="header">
+
 				<div class="userimg">
 					<div class="imgbx">
 						<img src="/media/{{user_icon_path}}" class="cover">
@@ -30,7 +31,7 @@
 				<div>
 					<form action="/search/" method="POST">
 					{% csrf_token %}
-					<input type="text" placeholder="Search chat" name="chat_title">
+					<input type="text" placeholder="Search chat" name="chat_title"><br>
 						<button type="submit">join</button>
 					</form>
 				</div>
@@ -104,7 +105,7 @@
 				<button type="submit" id="remove_chat"><li><ion-icon name="trash-outline"></ion-icon></li></button>
 				</form>
 				{% endif %}
-				<a href="../user/logout/">
+				<a href="/user/logout/">
 				<button id="exit-chat"><li><ion-icon name="exit-outline"></ion-icon></li></button>
 				</a>
 			</div>	
